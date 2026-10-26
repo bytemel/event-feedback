@@ -1,0 +1,18 @@
+{
+  "name": "event-feedback",
+  "version": "1.0.0",
+  "description": "Post-event feedback in one link and a QR code: a 0 to 10 score, two quick questions, live Net Promoter Score for the organiser. Neon Postgres on Vercel.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Timothy Mwangi",
+  "scripts": {
+    "dev": "vercel dev",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "1.2.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

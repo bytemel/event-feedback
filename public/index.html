@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Event Feedback: one link, one QR, honest numbers</title>
+  <meta name="description" content="Post-event feedback in 30 seconds: a 0 to 10 score, two quick questions, a QR code for the last slide and live Net Promoter Score for the organiser. Free, no sign-up, built on Neon Postgres.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232a4fa8'/%3E%3Cpath d='M8 10h16v10h-9l-5 4v-4H8z' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/app.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="top">
+    <div class="wrap">
+      <p class="crumb"><a href="/">Event Feedback</a></p>
+      <h1 id="title">Feedback before people leave the room</h1>
+      <p class="lead" id="lead">Put one QR code on the last slide. People answer in 30 seconds on their phones. You see the score live, before the chairs are stacked.</p>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    <p id="status" class="notice" role="status" hidden></p>
+
+    <section id="home" hidden>
+      <div class="pair">
+        <div class="card">
+          <h2>Try it</h2>
+          <p>The demo survey is for a pretend Demo Day. Answer it on your phone, then open the results and find your answer at the top.</p>
+          <div class="actions"><a class="btn btn-primary" href="/f/demo">Answer the demo</a><a class="btn" href="/r/demo">See demo results</a></div>
+        </div>
+        <form class="card field-stack" id="create">
+          <h2>Make your own</h2>
+          <div class="field"><label for="c-event">Event name</label><input id="c-event" name="event" type="text" maxlength="80" required placeholder="Founders breakfast, 14 November"></div>
+          <div class="field"><label for="c-q">One extra question <span class="hint">(optional)</span></label><input id="c-q" name="question" type="text" maxlength="120" placeholder="Which session should we run again?"></div>
+          <button class="btn btn-primary" type="submit">Make the survey</button>
+          <p class="hint">No sign-up. You get a QR code, a share link and a private results link.</p>
+        </form>
+      </div>
+      <section class="card">
+        <h2>What people answer</h2>
+        <ol class="steps">
+          <li>How likely are you to recommend this event to a friend? 0 to 10.</li>
+          <li>What worked? (optional)</li>
+          <li>What should we change? (optional)</li>
+          <li>Your extra question, if you set one.</li>
+          <li>Would you come again? Yes, maybe, no.</li>
+        </ol>
+        <p class="hint">The score is the Net Promoter Score: the share who gave 9 or 10, minus the share who gave 0 to 6. Answers are anonymous: no name, no email.</p>
+      </section>
+    </section>
+
+    <form id="form" class="card field-stack answer" hidden>
+      <fieldset class="scale">
+        <legend>How likely are you to recommend this event to a friend?</legend>
+        <div class="scale-row" id="scale"></div>
+        <div class="scale-ends" aria-hidden="true"><span>Not likely</span><span>Very likely</span></div>
+      </fieldset>
+      <div class="field"><label for="a-worked">What worked?</label><textarea id="a-worked" name="worked" rows="2" maxlength="500"></textarea></div>
+      <div class="field"><label for="a-change">What should we change?</label><textarea id="a-change" name="change" rows="2" maxlength="500"></textarea></div>
+      <div class="field" id="extra" hidden><label for="a-answer" id="extra-label"></label><textarea id="a-answer" name="answer" rows="2" maxlength="500"></textarea></div>
+      <fieldset class="again">
+        <legend>Would you come again?</legend>
+        <div class="checks">
+          <label class="check"><input type="radio" name="again" value="yes"> Yes</label>
+          <label class="check"><input type="radio" name="again" value="maybe"> Maybe</label>
+          <label class="check"><input type="radio" name="again" value="no"> No</label>
+        </div>
+      </fieldset>
+      <button class="btn btn-primary" type="submit">Send</button>
+      <p class="hint">Anonymous. No name or email is asked or stored.</p>
+    </form>
+
+    <section id="thanks" class="card" hidden>
+      <h2>Thank you</h2>
+      <p>Your answer is in. The organisers read every comment.</p>
+      <p id="thanks-demo" hidden><a class="btn btn-primary" href="/r/demo">See the demo results</a></p>
+    </section>
+
+    <section id="results" hidden>
+      <div class="tiles">
+        <div class="tile"><span class="tile-label">Net Promoter Score</span><span class="tile-value" id="t-nps">None yet</span><span class="tile-sub" id="t-nps-sub"></span></div>
+        <div class="tile"><span class="tile-label">Answers</span><span class="tile-value" id="t-n">0</span><span class="tile-sub" id="t-n-sub"></span></div>
+        <div class="tile"><span class="tile-label">Average score</span><span class="tile-value" id="t-avg">None yet</span><span class="tile-sub">out of 10</span></div>
+        <div class="tile"><span class="tile-label">Would come again</span><span class="tile-value" id="t-again">None yet</span><span class="tile-sub" id="t-again-sub"></span></div>
+      </div>
+      <div class="pair">
+        <section class="card" aria-labelledby="dist-h">
+          <h2 id="dist-h">How people scored it</h2>
+          <div id="dist" class="dist"></div>
+          <div class="groups" aria-hidden="true"><span class="g-det">Detractors 0 to 6</span><span class="g-pas">Passives 7 to 8</span><span class="g-pro">Promoters 9 to 10</span></div>
+          <p class="hint" id="groups-text"></p>
+        </section>
+        <section class="card share-card" aria-labelledby="share-h">
+          <h2 id="share-h">Share the survey</h2>
+          <div class="share-grid">
+            <div id="qr" class="qr"></div>
+            <div class="field-stack">
+              <div class="field"><label for="form-link">Survey link</label><div class="copy-row"><input id="form-link" type="text" readonly><button class="btn" type="button" data-copy="form-link">Copy</button></div></div>
+              <div class="actions"><a class="btn" id="qr-download" download="feedback-qr.svg">Download QR</a><button class="btn" type="button" id="csv">Download answers (CSV)</button></div>
+              <div class="field" id="private-field" hidden><label for="results-link">Private results link</label><div class="copy-row"><input id="results-link" type="text" readonly><button class="btn" type="button" data-copy="results-link">Copy</button></div></div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <section class="card" aria-labelledby="comments-h">
+        <div class="head-row"><h2 id="comments-h">What people said</h2>
+          <label class="hint" for="filter">Show <select id="filter"><option value="all">all scores</option><option value="det">detractors (0 to 6)</option><option value="pas">passives (7 to 8)</option><option value="pro">promoters (9 to 10)</option></select></label></div>
+        <div class="comments">
+          <div><h3>What worked</h3><ul id="c-worked" class="said"></ul></div>
+          <div><h3>What to change</h3><ul id="c-change" class="said"></ul></div>
+          <div id="c-answer-wrap" hidden><h3 id="c-answer-h"></h3><ul id="c-answer" class="said"></ul></div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="wrap foot">
+    <p>Open source: <a href="https://github.com/bytemel/event-feedback">github.com/bytemel/event-feedback</a>. Built by <a href="https://timmwangi.com">Timothy Mwangi</a>.</p>
+  </footer>
+</body>
+</html>
