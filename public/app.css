@@ -1,5 +1,7 @@
 .crumb { margin: 0 0 0.5rem; font-weight: 600; }
-.crumb a { text-decoration: none; }
+.crumb a { text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
+.crumb { margin-top: -0.6rem; }
+.foot a { display: inline-block; padding: 0.6rem 0; }
 .field-stack { display: grid; gap: 0.9rem; align-content: start; min-width: 0; }
 .field-stack h2 { margin: 0; }
 .answer { max-width: 44rem; }
@@ -25,14 +27,14 @@ legend { font-weight: 600; margin-bottom: 0.5rem; padding: 0; }
 .dist { display: grid; grid-template-columns: repeat(11, minmax(0, 1fr)); gap: 4px; align-items: end; height: 170px; border-bottom: 1px solid var(--line); position: relative; }
 .dist .col { display: grid; align-content: end; justify-items: center; height: 100%; gap: 2px; }
 .dist .bar { width: 100%; background: var(--accent); border-radius: 4px 4px 0 0; min-height: 0; }
-.dist .n { font-size: 0.75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.dist .n { font-size: 0.8125rem; color: var(--muted); font-variant-numeric: tabular-nums; }
 .dist-axis { display: grid; grid-template-columns: repeat(11, minmax(0, 1fr)); gap: 4px; text-align: center; font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; font-variant-numeric: tabular-nums; }
-.groups { display: grid; grid-template-columns: 7fr 2fr 2fr; gap: 4px; margin: 0.4rem 0 0.6rem; font-size: 0.75rem; color: var(--muted); text-align: center; }
-.groups span { border-top: 1px solid var(--line); padding-top: 0.2rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.groups { display: grid; grid-template-columns: 7fr 2fr 2fr; gap: 4px; margin: 0.4rem 0 0.6rem; font-size: 0.8125rem; color: var(--muted); text-align: center; }
+.groups span { border-top: 1px solid var(--line); padding-top: 0.2rem; white-space: normal; line-height: 1.2; }
 .share-grid { display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr); }
 .qr { background: #fff; border-radius: var(--radius-sm); padding: 0.4rem; width: min(200px, 100%); }
 .qr svg { width: 100%; height: auto; display: block; }
-.comments { display: grid; gap: 1.25rem; grid-template-columns: minmax(0, 1fr); }
+.comments { display: grid; gap: 1.25rem; grid-template-columns: minmax(0, 1fr); margin-bottom: 1rem; }
 .comments h3 { color: var(--muted); font-size: 0.95rem; }
 .said { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
 .said li { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 0.55rem 0.7rem; display: flex; gap: 0.6rem; align-items: baseline; overflow-wrap: anywhere; }
@@ -41,8 +43,10 @@ legend { font-weight: 600; margin-bottom: 0.5rem; padding: 0; }
 .sample { color: var(--muted); font-size: 0.78rem; margin-left: auto; flex: 0 0 auto; }
 @media (min-width: 720px) {
   .tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .share-grid { grid-template-columns: 200px minmax(0, 1fr); }
   .comments { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+}
+@media (min-width: 1200px) {
+  .share-grid { grid-template-columns: 200px minmax(0, 1fr); }
 }
 @media (max-width: 380px) {
   .scale-row { grid-template-columns: repeat(6, minmax(0, 1fr)); }

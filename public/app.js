@@ -9,6 +9,7 @@ const key = new URLSearchParams(location.hash.slice(1)).get("key") || "";
 const DONE = `event-feedback:answered:${slug}`;
 const SVG = "http://www.w3.org/2000/svg";
 let latest = null;
+let expanded = false;
 
 function el(tag, props = {}, ...kids) {
   const node = Object.assign(document.createElement(tag), props);
@@ -57,14 +58,19 @@ function renderComments() {
   const list = latest.results.responses.filter((r) => filter === "all" || group(r.score) === filter);
   const fill = (id, field) => {
     const items = list.filter((r) => r[field]);
-    $(id).replaceChildren(...(items.length ? items.slice(0, 60).map((r) => el("li", {},
+    const shown = expanded ? items.slice(0, 200) : items.slice(0, 5);
+    $(id).replaceChildren(...(items.length ? shown.map((r) => el("li", {},
       el("span", { className: badgeClass(r.score), textContent: String(r.score), title: `Scored ${r.score}` }),
       el("span", { textContent: r[field] }),
       r.seeded ? el("span", { className: "sample", textContent: "sample" }) : null)) : [el("li", { className: "empty", textContent: "Nothing here yet." })]));
+    hidden += Math.max(0, items.length - shown.length);
   };
+  let hidden = 0;
   fill("c-worked", "worked");
   fill("c-change", "change");
   if (latest.survey.question) fill("c-answer", "answer");
+  $("more").hidden = !hidden && !expanded;
+  $("more").textContent = expanded ? "Show fewer" : `Show all comments (${hidden} more)`;
 }
 
 function renderResults(data) {
@@ -181,6 +187,7 @@ if (view === "home") {
 } else {
   $("results").hidden = false;
   $("filter").addEventListener("change", renderComments);
+  $("more").addEventListener("click", () => { expanded = !expanded; renderComments(); });
   $("csv").addEventListener("click", csv);
   const load = async () => {
     try {
